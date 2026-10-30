@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Bell, MoreHorizontal, Plus, Edit2, Trash2 } from 'lucide-react';
-import { PriorityValue, SubtaskColorKey } from '@synctask/shared';
+import { Bell, MoreHorizontal, Plus, Edit2, Trash2, Repeat } from 'lucide-react';
+import { PriorityValue, SubtaskColorKey, RecurrenceType } from '@synctask/shared';
 import { PriorityBadge } from '../../components/ui/Badge';
 import { Checkbox } from '../../components/ui/Checkbox';
 import { Chip } from '../../components/ui/Chip';
 import { ProgressSegments } from './ProgressSegments';
+import { CircularProgress } from './CircularProgress';
 import { SubtaskTree, SubtaskItem } from '../subtasks/SubtaskTree';
 
 export interface TaskCardData {
@@ -19,6 +20,9 @@ export interface TaskCardData {
   completed: boolean;
   tags: string[];
   reminderSet?: boolean;
+  remindBeforeMin?: number | null;
+  listId?: string | null;
+  recurrence?: RecurrenceType | null;
   subtasks: SubtaskItem[];
 }
 
@@ -72,9 +76,23 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {task.subtasks.length > 0 && (
+            <CircularProgress
+              total={task.subtasks.length}
+              completed={task.subtasks.filter((s) => s.done).length}
+              size={22}
+              strokeWidth={2.5}
+              showText={false}
+            />
+          )}
           {task.reminderSet && (
             <span title="Reminder scheduled" className="text-text-muted">
               <Bell size={13} />
+            </span>
+          )}
+          {task.recurrence && task.recurrence !== 'none' && (
+            <span title={`Repeats: ${task.recurrence}`} className="text-text-muted">
+              <Repeat size={13} />
             </span>
           )}
           {task.dueLabel && (
@@ -82,6 +100,29 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               {task.dueLabel}
             </Chip>
           )}
+
+          {/* Mobile & Hover Action Shortcuts */}
+          <div
+            className="flex items-center gap-0.5 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => onEdit?.(task)}
+              aria-label="Edit task"
+              className="p-1 rounded text-text-muted hover:text-text active:bg-surface-2"
+            >
+              <Edit2 size={13} />
+            </button>
+            <button
+              type="button"
+              onClick={() => onDelete?.(task.id)}
+              aria-label="Delete task"
+              className="p-1 rounded text-text-muted hover:text-prio-high active:bg-prio-high/10"
+            >
+              <Trash2 size={13} />
+            </button>
+          </div>
         </div>
       </div>
 

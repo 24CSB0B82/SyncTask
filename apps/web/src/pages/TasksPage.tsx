@@ -19,14 +19,16 @@ import { formatDueChip } from '../lib/dates';
 import { FilterRow } from '../features/tasks/FilterRow';
 import { TaskCard, TaskCardData } from '../features/tasks/TaskCard';
 import { TaskRow } from '../features/tasks/TaskRow';
+import { KanbanBoard } from '../features/kanban/KanbanBoard';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../components/ui/Toast';
+import { Celebration } from '../components/ui/Celebration';
 
 interface TasksPageProps {
   onQuickAdd?: (priority: PriorityValue) => void;
   onEditTask?: (task: TaskCardData) => void;
   activeStatusTab?: 'all' | 'active' | 'completed';
-  currentView?: 'cards' | 'list' | 'calendar';
+  currentView?: 'cards' | 'list' | 'board' | 'calendar';
   searchQuery?: string;
 }
 
@@ -40,6 +42,7 @@ export const TasksPage: React.FC<TasksPageProps> = ({
   const { listId } = useParams<{ listId: string }>();
   const location = useLocation();
   const { show: showToast } = useToast();
+  const [celebrate, setCelebrate] = useState(false);
 
   // Live Dexie subscriptions
   const rawTasks = useLiveTasks();
@@ -142,6 +145,9 @@ export const TasksPage: React.FC<TasksPageProps> = ({
         completed: task.completed,
         tags: task.tags,
         reminderSet: task.remindBeforeMin !== null && task.remindBeforeMin !== -1,
+        remindBeforeMin: task.remindBeforeMin,
+        listId: task.listId,
+        recurrence: task.recurrence,
         subtasks: taskSubtasks,
       };
     });
@@ -150,9 +156,15 @@ export const TasksPage: React.FC<TasksPageProps> = ({
   // Handlers for task interactions
   const handleToggleComplete = async (id: string, completed: boolean) => {
     const task = rawTasks.find((t) => t.id === id);
+    const remainingActive = mappedTasks.filter((t) => !t.completed && t.id !== id);
+
     await toggleTaskComplete(id, completed);
 
     if (completed && task) {
+      if (remainingActive.length === 0 && mappedTasks.length > 0) {
+        setCelebrate(true);
+      }
+
       showToast({
         title: 'Task marked completed',
         description: `"${task.title}" moved to completed.`,
@@ -183,6 +195,10 @@ export const TasksPage: React.FC<TasksPageProps> = ({
         },
       });
     }
+  };
+
+  const handleUpdatePriority = async (id: string, priority: 0 | 1 | 2) => {
+    await updateTask(id, { priority });
   };
 
   const handleToggleSubtask = async (taskId: string, subtaskId: string, done: boolean) => {
@@ -459,6 +475,17 @@ export const TasksPage: React.FC<TasksPageProps> = ({
             </div>
           )}
         </div>
+      ) : currentView === 'board' ? (
+        <KanbanBoard
+          tasks={mappedTasks}
+          onToggleComplete={handleToggleComplete}
+          onUpdatePriority={handleUpdatePriority}
+          onEditTask={(task) => onEditTask?.(task)}
+          onDeleteTask={handleDeleteTask}
+          onQuickAdd={(lane) =>
+            onQuickAdd?.(lane === 'inprogress' ? PRIORITIES.HIGH : PRIORITIES.MEDIUM)
+          }
+        />
       ) : (
         /* Cards View (Grouped by Priority) */
         <div className="space-y-8">
@@ -467,6 +494,8 @@ export const TasksPage: React.FC<TasksPageProps> = ({
           {renderPriorityGroup('Low Priority', 'bg-prio-low', lowTasks, PRIORITIES.LOW)}
         </div>
       )}
+
+      <Celebration active={celebrate} onComplete={() => setCelebrate(false)} />
     </div>
   );
 };

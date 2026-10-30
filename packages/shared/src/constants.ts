@@ -69,6 +69,16 @@ export const REMINDER_LEAD_OPTIONS = [
   { label: 'No reminder', value: -1 },
 ] as const;
 
+export const RECURRENCE_OPTIONS = [
+  { label: 'Does not repeat', value: 'none' },
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekdays (Mon-Fri)', value: 'weekdays' },
+  { label: 'Weekly', value: 'weekly' },
+  { label: 'Monthly', value: 'monthly' },
+] as const;
+
+export type RecurrenceType = 'none' | 'daily' | 'weekdays' | 'weekly' | 'monthly';
+
 export const DEFAULT_USER_SETTINGS = {
   theme: 'system' as const,
   weekStart: 'mon' as const,

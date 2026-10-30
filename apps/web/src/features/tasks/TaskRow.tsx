@@ -3,6 +3,7 @@ import { PriorityValue, SubtaskColorKey } from '@synctask/shared';
 import { Checkbox } from '../../components/ui/Checkbox';
 import { Chip } from '../../components/ui/Chip';
 import { PriorityBadge } from '../../components/ui/Badge';
+import { CircularProgress } from './CircularProgress';
 import { Edit2, Trash2 } from 'lucide-react';
 import { TaskCardData } from './TaskCard';
 
@@ -37,9 +38,14 @@ export const TaskRow: React.FC<TaskRowProps> = ({ task, onToggleComplete, onEdit
           {task.title}
         </span>
         {task.subtasks.length > 0 && (
-          <span className="text-[11px] font-mono text-text-muted shrink-0">
-            ({task.subtasks.filter((s) => s.done).length}/{task.subtasks.length})
-          </span>
+          <CircularProgress
+            total={task.subtasks.length}
+            completed={task.subtasks.filter((s) => s.done).length}
+            size={18}
+            strokeWidth={2}
+            showText={true}
+            className="shrink-0 ml-1"
+          />
         )}
       </div>
 

@@ -14,6 +14,7 @@ import {
 } from '@synctask/shared';
 import { getDb, SyncTaskDatabase } from './dexie';
 import { getActiveUserId } from './activeUser';
+import { computeNextRecurringDate } from '../lib/dates';
 
 function getTargetUserId(userId?: string): string {
   return userId || getActiveUserId();
@@ -44,6 +45,7 @@ export async function createTask(
     tags: (input.tags ?? []).map((t) => t.toLowerCase().trim()),
     completed: false,
     completedAt: null,
+    recurrence: input.recurrence ?? null,
     remindBeforeMin: input.remindBeforeMin ?? null,
     rev: 0,
     createdAt: now,
@@ -124,6 +126,25 @@ export async function toggleTaskComplete(
       if (!notif.dismissedAt) {
         await dismissNotification(notif.id, effectiveUserId);
       }
+    }
+
+    // Recurring Tasks Engine: Automatically generate subsequent occurrence
+    if (task.recurrence && task.recurrence !== 'none') {
+      const nextDueDate = computeNextRecurringDate(task.dueDate, task.recurrence);
+      await createTask(
+        {
+          title: task.title,
+          description: task.description,
+          listId: task.listId,
+          priority: task.priority,
+          tags: task.tags,
+          dueDate: nextDueDate,
+          dueTime: task.dueTime,
+          recurrence: task.recurrence,
+          remindBeforeMin: task.remindBeforeMin,
+        },
+        effectiveUserId
+      );
     }
   }
 

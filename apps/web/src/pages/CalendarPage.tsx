@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Task, PRIORITIES, PriorityValue } from '@synctask/shared';
+import { Task, PRIORITIES, PriorityValue, RecurrenceType } from '@synctask/shared';
 import { useLiveTasks, useLiveSettings } from '../db/useDatabase';
 import { toggleTaskComplete, createTask, updateTask } from '../db/repositories';
 import { CalendarGrid } from '../features/calendar/CalendarGrid';
@@ -64,6 +64,7 @@ export const CalendarPage: React.FC = () => {
     priority: PriorityValue;
     tags: string[];
     listId?: string | null;
+    recurrence?: RecurrenceType | null;
   }) => {
     if (data.id) {
       await updateTask(data.id, {
@@ -74,6 +75,7 @@ export const CalendarPage: React.FC = () => {
         priority: data.priority,
         tags: data.tags,
         listId: data.listId ?? null,
+        recurrence: data.recurrence ?? null,
       });
       showToast({ title: 'Task updated', type: 'success' });
     } else {
@@ -85,6 +87,7 @@ export const CalendarPage: React.FC = () => {
         priority: data.priority,
         tags: data.tags,
         listId: data.listId ?? null,
+        recurrence: data.recurrence ?? null,
       });
       showToast({ title: 'Task scheduled', type: 'success' });
     }

@@ -24,8 +24,18 @@ export const Dialog: React.FC<DialogProps> = ({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-150" />
         <DialogPrimitive.Content
-          className={`fixed left-[50%] top-[50%] z-50 w-full ${maxWidth} translate-x-[-50%] translate-y-[-50%] rounded-card bg-surface p-6 shadow-popover border border-border duration-150 focus:outline-none`}
+          className={`fixed z-50 w-full bg-surface shadow-popover border border-border duration-200 focus:outline-none ${maxWidth} 
+            /* Mobile: Native Bottom Sheet */
+            max-sm:bottom-0 max-sm:top-auto max-sm:left-0 max-sm:right-0 max-sm:translate-x-0 max-sm:translate-y-0 
+            max-sm:rounded-t-2xl max-sm:rounded-b-none max-sm:max-h-[88vh] max-sm:overflow-y-auto max-sm:p-5 safe-area-pb 
+            max-sm:animate-in max-sm:slide-in-from-bottom
+            /* Desktop: Centered Modal Dialog */
+            sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-card sm:p-6 
+            sm:animate-in sm:zoom-in-95`}
         >
+          {/* Mobile Drag Handle */}
+          <div className="w-10 h-1.5 rounded-full bg-border/80 mx-auto mb-3 sm:hidden" />
+
           <div className="flex items-center justify-between pb-3 border-b border-border mb-4">
             <div>
               <DialogPrimitive.Title className="text-base font-semibold text-text">

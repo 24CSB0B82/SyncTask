@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { PRIORITIES, PriorityValue, REMINDER_LEAD_OPTIONS, DEFAULT_LISTS } from '@synctask/shared';
+import {
+  PRIORITIES,
+  PriorityValue,
+  REMINDER_LEAD_OPTIONS,
+  RECURRENCE_OPTIONS,
+  RecurrenceType,
+  DEFAULT_LISTS,
+} from '@synctask/shared';
 import { Dialog } from '../../components/ui/Dialog';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
@@ -20,6 +27,7 @@ interface TaskDialogProps {
     tags: string[];
     listId?: string | null;
     remindBeforeMin?: number | null;
+    recurrence?: RecurrenceType | null;
   } | null;
   lists?: Array<{ id: string; name: string }>;
   onSaveTask?: (data: {
@@ -32,6 +40,7 @@ interface TaskDialogProps {
     tags: string[];
     listId?: string | null;
     remindBeforeMin?: number | null;
+    recurrence?: RecurrenceType | null;
   }) => void;
 }
 
@@ -52,6 +61,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [reminder, setReminder] = useState<string>('use_default');
+  const [recurrence, setRecurrence] = useState<string>('none');
 
   useEffect(() => {
     if (taskToEdit) {
@@ -62,6 +72,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
       setPriority(taskToEdit.priority);
       setListId(taskToEdit.listId || '');
       setTags(taskToEdit.tags || []);
+      setRecurrence(taskToEdit.recurrence || 'none');
       setReminder(
         taskToEdit.remindBeforeMin === null || taskToEdit.remindBeforeMin === undefined
           ? 'use_default'
@@ -77,6 +88,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
       setTags([]);
       setTagInput('');
       setReminder('use_default');
+      setRecurrence('none');
     }
   }, [open, taskToEdit, initialPriority]);
 
@@ -111,6 +123,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
       tags,
       listId: listId || null,
       remindBeforeMin: parsedReminder,
+      recurrence: recurrence === 'none' ? null : (recurrence as RecurrenceType),
     });
     onOpenChange(false);
   };
@@ -204,8 +217,8 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
           </div>
         </div>
 
-        {/* List & Reminder Lead Time */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* List, Repeat & Reminder Lead Time */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label className="block text-xs font-medium text-text mb-1">List</label>
             <Select value={listId} onChange={(e) => setListId(e.target.value)}>
@@ -213,6 +226,17 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
               {lists.map((l) => (
                 <option key={l.id} value={l.id}>
                   {l.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-text mb-1">Repeat</label>
+            <Select value={recurrence} onChange={(e) => setRecurrence(e.target.value)}>
+              {RECURRENCE_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
                 </option>
               ))}
             </Select>

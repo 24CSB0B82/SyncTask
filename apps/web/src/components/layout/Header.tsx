@@ -7,6 +7,7 @@ import {
   Sun,
   LayoutGrid,
   List as ListIcon,
+  Columns3,
   Calendar as CalendarIcon,
   Menu,
   PanelRight,
@@ -28,8 +29,8 @@ interface HeaderProps {
   onNewTask?: () => void;
   activeStatusTab?: 'all' | 'active' | 'completed';
   onStatusTabChange?: (tab: 'all' | 'active' | 'completed') => void;
-  currentView?: 'cards' | 'list' | 'calendar';
-  onViewChange?: (view: 'cards' | 'list' | 'calendar') => void;
+  currentView?: 'cards' | 'list' | 'board' | 'calendar';
+  onViewChange?: (view: 'cards' | 'list' | 'board' | 'calendar') => void;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
   notifications?: Notification[];
@@ -216,6 +217,18 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <ListIcon size={13} />
               <span className="hidden md:inline">List</span>
+            </button>
+            <button
+              onClick={() => onViewChange?.('board')}
+              aria-label="Kanban board view"
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-[8px] font-medium transition-colors ${
+                currentView === 'board'
+                  ? 'bg-surface text-text shadow-sm'
+                  : 'text-text-muted hover:text-text'
+              }`}
+            >
+              <Columns3 size={13} />
+              <span className="hidden md:inline">Board</span>
             </button>
             <Link
               to="/calendar"

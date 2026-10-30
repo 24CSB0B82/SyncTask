@@ -23,8 +23,8 @@ interface AppLayoutProps {
   onNewTask?: () => void;
   activeStatusTab?: 'all' | 'active' | 'completed';
   onStatusTabChange?: (tab: 'all' | 'active' | 'completed') => void;
-  currentView?: 'cards' | 'list' | 'calendar';
-  onViewChange?: (view: 'cards' | 'list' | 'calendar') => void;
+  currentView?: 'cards' | 'list' | 'board' | 'calendar';
+  onViewChange?: (view: 'cards' | 'list' | 'board' | 'calendar') => void;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
   onOpenTask?: (taskId: string) => void;
@@ -142,7 +142,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         />
       </div>
 
-      <BottomNav onOpenMenu={() => setMobileSidebarOpen(true)} onNewTask={() => onNewTask?.()} />
+      <BottomNav
+        onOpenMenu={() => setMobileSidebarOpen(true)}
+        onNewTask={() => onNewTask?.()}
+        unreadAlertsCount={notifications.filter((n) => !n.readAt && !n.dismissedAt).length}
+      />
 
       <ListDialog
         open={listDialogOpen}

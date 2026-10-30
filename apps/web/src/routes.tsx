@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { PRIORITIES, PriorityValue } from '@synctask/shared';
+import { PRIORITIES, PriorityValue, RecurrenceType } from '@synctask/shared';
 import { AppLayout } from './components/layout/AppLayout';
 import { TasksPage } from './pages/TasksPage';
 import { TaskDialog } from './features/tasks/TaskDialog';
@@ -33,16 +33,16 @@ export const AppRoutes: React.FC = () => {
   // Status Tab: All | Active | Completed
   const [activeStatusTab, setActiveStatusTab] = useState<'all' | 'active' | 'completed'>('active');
 
-  // View Preference (Cards vs List) remembered per device (FR-ORG-6)
-  const [currentView, setCurrentView] = useState<'cards' | 'list' | 'calendar'>(() => {
+  // View Preference (Cards vs List vs Board) remembered per device (FR-ORG-6)
+  const [currentView, setCurrentView] = useState<'cards' | 'list' | 'board' | 'calendar'>(() => {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('st-view');
-      if (saved === 'list' || saved === 'cards') return saved;
+      if (saved === 'list' || saved === 'cards' || saved === 'board') return saved;
     }
     return 'cards';
   });
 
-  const handleViewChange = (view: 'cards' | 'list' | 'calendar') => {
+  const handleViewChange = (view: 'cards' | 'list' | 'board' | 'calendar') => {
     setCurrentView(view);
     if (typeof localStorage !== 'undefined' && view !== 'calendar') {
       localStorage.setItem('st-view', view);
@@ -106,6 +106,7 @@ export const AppRoutes: React.FC = () => {
     tags: string[];
     listId?: string | null;
     remindBeforeMin?: number | null;
+    recurrence?: RecurrenceType | null;
   }) => {
     if (taskData.id) {
       // Edit task
@@ -118,6 +119,7 @@ export const AppRoutes: React.FC = () => {
         tags: taskData.tags,
         listId: taskData.listId ?? null,
         remindBeforeMin: taskData.remindBeforeMin ?? null,
+        recurrence: taskData.recurrence ?? null,
       });
       showToast({
         title: 'Task updated',
@@ -134,6 +136,7 @@ export const AppRoutes: React.FC = () => {
         tags: taskData.tags,
         listId: taskData.listId ?? null,
         remindBeforeMin: taskData.remindBeforeMin ?? null,
+        recurrence: taskData.recurrence ?? null,
       });
       showToast({
         title: 'Task created',

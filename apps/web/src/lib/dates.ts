@@ -1,4 +1,4 @@
-import { format, parseISO, startOfDay, isBefore, isSameDay, addDays, subDays } from 'date-fns';
+import { format, parseISO, startOfDay, isBefore, isSameDay, addDays, subDays, addMonths } from 'date-fns';
 
 export interface DueChipInfo {
   text: string;
@@ -87,4 +87,42 @@ export function formatDueChip(
  */
 export function getLocalDateString(date: Date = new Date()): string {
   return format(date, 'yyyy-MM-dd');
+}
+
+/**
+ * Computes the subsequent due date based on recurrence pattern
+ */
+export function computeNextRecurringDate(
+  currentDueDate: string | null,
+  recurrence: string
+): string {
+  const baseDate = currentDueDate ? parseISO(currentDueDate) : new Date();
+  let nextDate: Date;
+
+  switch (recurrence) {
+    case 'daily':
+      nextDate = addDays(baseDate, 1);
+      break;
+    case 'weekdays': {
+      const dayOfWeek = baseDate.getDay(); // 0 = Sun, 5 = Fri, 6 = Sat
+      if (dayOfWeek === 5) {
+        nextDate = addDays(baseDate, 3); // Fri -> Mon
+      } else if (dayOfWeek === 6) {
+        nextDate = addDays(baseDate, 2); // Sat -> Mon
+      } else {
+        nextDate = addDays(baseDate, 1);
+      }
+      break;
+    }
+    case 'weekly':
+      nextDate = addDays(baseDate, 7);
+      break;
+    case 'monthly':
+      nextDate = addMonths(baseDate, 1);
+      break;
+    default:
+      nextDate = addDays(baseDate, 1);
+  }
+
+  return format(nextDate, 'yyyy-MM-dd');
 }

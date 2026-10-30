@@ -29,6 +29,7 @@ export const TaskSchema = z.object({
   tags: z.array(z.string().min(1).max(30).toLowerCase()).max(10).default([]),
   completed: z.boolean().default(false),
   completedAt: z.string().datetime().nullable().default(null),
+  recurrence: z.enum(['none', 'daily', 'weekdays', 'weekly', 'monthly']).nullable().default(null),
   remindBeforeMin: z.number().int().nullable().default(null), // null = default, -1 = no reminder, >=0 = lead min
   rev: z.number().int().default(0),
   createdAt: z.string().datetime(),
@@ -44,6 +45,7 @@ export const CreateTaskInputSchema = TaskSchema.pick({
   priority: true,
   listId: true,
   tags: true,
+  recurrence: true,
   remindBeforeMin: true,
 }).partial({
   description: true,
@@ -52,6 +54,7 @@ export const CreateTaskInputSchema = TaskSchema.pick({
   priority: true,
   listId: true,
   tags: true,
+  recurrence: true,
   remindBeforeMin: true,
 });
 
