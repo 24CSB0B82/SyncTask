@@ -33,16 +33,16 @@ export const AppRoutes: React.FC = () => {
   // Status Tab: All | Active | Completed
   const [activeStatusTab, setActiveStatusTab] = useState<'all' | 'active' | 'completed'>('active');
 
-  // View Preference (Cards vs List vs Board) remembered per device (FR-ORG-6)
-  const [currentView, setCurrentView] = useState<'cards' | 'list' | 'board' | 'calendar'>(() => {
+  // View Preference (Cards vs Board) remembered per device (FR-ORG-6)
+  const [currentView, setCurrentView] = useState<'cards' | 'board' | 'calendar'>(() => {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('st-view');
-      if (saved === 'list' || saved === 'cards' || saved === 'board') return saved;
+      if (saved === 'cards' || saved === 'board') return saved;
     }
     return 'cards';
   });
 
-  const handleViewChange = (view: 'cards' | 'list' | 'board' | 'calendar') => {
+  const handleViewChange = (view: 'cards' | 'board' | 'calendar') => {
     setCurrentView(view);
     if (typeof localStorage !== 'undefined' && view !== 'calendar') {
       localStorage.setItem('st-view', view);

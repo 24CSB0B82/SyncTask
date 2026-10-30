@@ -29,3 +29,4 @@ describe('Recurring Tasks Engine', () => {
     expect(next).toBe('2026-10-15'); // Thursday
   });
 });
+

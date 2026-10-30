@@ -96,3 +96,4 @@ export const Celebration: React.FC<CelebrationProps> = ({
     </div>
   );
 };
+

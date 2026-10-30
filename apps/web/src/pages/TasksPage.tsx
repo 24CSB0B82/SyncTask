@@ -18,7 +18,6 @@ import { sortTasks, SortField } from '../features/tasks/urgency';
 import { formatDueChip } from '../lib/dates';
 import { FilterRow } from '../features/tasks/FilterRow';
 import { TaskCard, TaskCardData } from '../features/tasks/TaskCard';
-import { TaskRow } from '../features/tasks/TaskRow';
 import { KanbanBoard } from '../features/kanban/KanbanBoard';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../components/ui/Toast';
@@ -28,7 +27,7 @@ interface TasksPageProps {
   onQuickAdd?: (priority: PriorityValue) => void;
   onEditTask?: (task: TaskCardData) => void;
   activeStatusTab?: 'all' | 'active' | 'completed';
-  currentView?: 'cards' | 'list' | 'board' | 'calendar';
+  currentView?: 'cards' | 'board' | 'calendar';
   searchQuery?: string;
 }
 
@@ -447,33 +446,6 @@ export const TasksPage: React.FC<TasksPageProps> = ({
           >
             Create a task
           </Button>
-        </div>
-      ) : currentView === 'list' ? (
-        <div className="space-y-2">
-          {mappedTasks
-            .slice(0, smartView === 'completed' ? completedLimit : undefined)
-            .map((task) => (
-              <TaskRow
-                key={task.id}
-                task={task}
-                onToggleComplete={handleToggleComplete}
-                onEdit={() => onEditTask?.(task)}
-                onDelete={handleDeleteTask}
-              />
-            ))}
-
-          {/* Pagination for Completed view (NFR-8) */}
-          {smartView === 'completed' && mappedTasks.length > completedLimit && (
-            <div className="text-center pt-4">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setCompletedLimit((prev) => prev + 50)}
-              >
-                Load more (50)
-              </Button>
-            </div>
-          )}
         </div>
       ) : currentView === 'board' ? (
         <KanbanBoard

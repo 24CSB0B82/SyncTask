@@ -6,7 +6,6 @@ import {
   Moon,
   Sun,
   LayoutGrid,
-  List as ListIcon,
   Columns3,
   Calendar as CalendarIcon,
   Menu,
@@ -29,8 +28,8 @@ interface HeaderProps {
   onNewTask?: () => void;
   activeStatusTab?: 'all' | 'active' | 'completed';
   onStatusTabChange?: (tab: 'all' | 'active' | 'completed') => void;
-  currentView?: 'cards' | 'list' | 'board' | 'calendar';
-  onViewChange?: (view: 'cards' | 'list' | 'board' | 'calendar') => void;
+  currentView?: 'cards' | 'board' | 'calendar';
+  onViewChange?: (view: 'cards' | 'board' | 'calendar') => void;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
   notifications?: Notification[];
@@ -191,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({
           {getSyncBadge()}
         </Link>
 
-        {/* View Switcher: Cards / List / Calendar */}
+        {/* View Switcher: Cards / Board / Calendar */}
         {!isCalendarRoute && (
           <div className="hidden sm:flex items-center bg-surface-2 p-0.5 rounded-input border border-border text-xs">
             <button
@@ -205,18 +204,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <LayoutGrid size={13} />
               <span className="hidden md:inline">Cards</span>
-            </button>
-            <button
-              onClick={() => onViewChange?.('list')}
-              aria-label="List view"
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-[8px] font-medium transition-colors ${
-                currentView === 'list'
-                  ? 'bg-surface text-text shadow-sm'
-                  : 'text-text-muted hover:text-text'
-              }`}
-            >
-              <ListIcon size={13} />
-              <span className="hidden md:inline">List</span>
             </button>
             <button
               onClick={() => onViewChange?.('board')}

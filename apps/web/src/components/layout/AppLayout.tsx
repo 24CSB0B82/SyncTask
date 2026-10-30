@@ -23,8 +23,8 @@ interface AppLayoutProps {
   onNewTask?: () => void;
   activeStatusTab?: 'all' | 'active' | 'completed';
   onStatusTabChange?: (tab: 'all' | 'active' | 'completed') => void;
-  currentView?: 'cards' | 'list' | 'board' | 'calendar';
-  onViewChange?: (view: 'cards' | 'list' | 'board' | 'calendar') => void;
+  currentView?: 'cards' | 'board' | 'calendar';
+  onViewChange?: (view: 'cards' | 'board' | 'calendar') => void;
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
   onOpenTask?: (taskId: string) => void;
