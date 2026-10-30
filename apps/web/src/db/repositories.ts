@@ -24,10 +24,7 @@ function getTargetUserId(userId?: string): string {
 // TASKS REPOSITORY
 // ==========================================
 
-export async function createTask(
-  input: CreateTaskInput,
-  userId?: string
-): Promise<Task> {
+export async function createTask(input: CreateTaskInput, userId?: string): Promise<Task> {
   const effectiveUserId = getTargetUserId(userId);
   const db = getDb(effectiveUserId);
   const now = new Date().toISOString();
@@ -68,11 +65,7 @@ export async function createTask(
   return task;
 }
 
-export async function updateTask(
-  id: string,
-  patch: Partial<Task>,
-  userId?: string
-): Promise<Task> {
+export async function updateTask(id: string, patch: Partial<Task>, userId?: string): Promise<Task> {
   const effectiveUserId = getTargetUserId(userId);
   const db = getDb(effectiveUserId);
   const existing = await db.tasks.get(id);
@@ -207,10 +200,7 @@ export async function restoreTask(id: string, userId?: string): Promise<void> {
 // LISTS REPOSITORY
 // ==========================================
 
-export async function createList(
-  input: CreateListInput,
-  userId?: string
-): Promise<List> {
+export async function createList(input: CreateListInput, userId?: string): Promise<List> {
   const effectiveUserId = getTargetUserId(userId);
   const db = getDb(effectiveUserId);
   const now = new Date().toISOString();
@@ -244,11 +234,7 @@ export async function createList(
   return list;
 }
 
-export async function updateList(
-  id: string,
-  patch: Partial<List>,
-  userId?: string
-): Promise<List> {
+export async function updateList(id: string, patch: Partial<List>, userId?: string): Promise<List> {
   const effectiveUserId = getTargetUserId(userId);
   const db = getDb(effectiveUserId);
   const existing = await db.lists.get(id);
@@ -320,10 +306,7 @@ export async function deleteList(id: string, userId?: string): Promise<void> {
 // SUBTASKS REPOSITORY
 // ==========================================
 
-export async function createSubtask(
-  input: CreateSubtaskInput,
-  userId?: string
-): Promise<Subtask> {
+export async function createSubtask(input: CreateSubtaskInput, userId?: string): Promise<Subtask> {
   const effectiveUserId = getTargetUserId(userId);
   const db = getDb(effectiveUserId);
   const now = new Date().toISOString();
@@ -445,10 +428,7 @@ export async function createNotification(
   return notification;
 }
 
-export async function markNotificationRead(
-  id: string,
-  userId?: string
-): Promise<void> {
+export async function markNotificationRead(id: string, userId?: string): Promise<void> {
   const effectiveUserId = getTargetUserId(userId);
   const db = getDb(effectiveUserId);
   const existing = await db.notifications.get(id);
@@ -529,10 +509,7 @@ export async function snoozeNotification(
   });
 }
 
-export async function dismissNotification(
-  id: string,
-  userId?: string
-): Promise<void> {
+export async function dismissNotification(id: string, userId?: string): Promise<void> {
   const effectiveUserId = getTargetUserId(userId);
   const db = getDb(effectiveUserId);
   const existing = await db.notifications.get(id);

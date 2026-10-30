@@ -94,7 +94,6 @@ During project demonstrations and testing, users create an account, log in, and 
      4. Calls `resetDemoDatabase()`, which clears `synctask_demo` and re-seeds clean starter tasks, subtasks, lists, and notifications.
    - The user's account database (`synctask_<userId>`) and MongoDB cloud records remain securely persisted and isolated.
 
-
 ---
 
 ## Decision 5: Mobile Ergonomics, Kanban Workflow, and Task Recurrence Engine

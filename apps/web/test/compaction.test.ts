@@ -98,4 +98,3 @@ describe('Outbox Compaction', () => {
     expect(discardedSeqs).toHaveLength(0);
   });
 });
-

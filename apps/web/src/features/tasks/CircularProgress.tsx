@@ -29,15 +29,18 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
     completed === total
       ? 'var(--subtask-emerald, #10b981)'
       : completed > 0
-      ? 'var(--primary, #0ea5e9)'
-      : 'var(--border, #cbd5e1)';
+        ? 'var(--primary, #0ea5e9)'
+        : 'var(--border, #cbd5e1)';
 
   return (
     <div
       className={`inline-flex items-center gap-1.5 select-none ${className}`}
       title={`${completed} of ${total} subtasks completed (${percentage}%)`}
     >
-      <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+      <div
+        className="relative inline-flex items-center justify-center"
+        style={{ width: size, height: size }}
+      >
         <svg
           width={size}
           height={size}
@@ -87,4 +90,3 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({
     </div>
   );
 };
-

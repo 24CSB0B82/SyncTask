@@ -21,4 +21,3 @@ export function subscribeActiveUserId(listener: (userId: string) => void): () =>
     activeUserListeners.delete(listener);
   };
 }
-

@@ -18,7 +18,11 @@ const TaskSchema = new Schema<ITaskDoc>(
     tags: { type: [String], default: [] },
     completed: { type: Boolean, default: false },
     completedAt: { type: String, default: null },
-    recurrence: { type: String, enum: ['none', 'daily', 'weekdays', 'weekly', 'monthly', null], default: null },
+    recurrence: {
+      type: String,
+      enum: ['none', 'daily', 'weekdays', 'weekly', 'monthly', null],
+      default: null,
+    },
     remindBeforeMin: { type: Number, default: null },
     rev: { type: Number, default: 0 },
     createdAt: { type: String, required: true },

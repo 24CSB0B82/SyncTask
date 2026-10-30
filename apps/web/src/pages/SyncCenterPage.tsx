@@ -314,7 +314,9 @@ export const SyncCenterPage: React.FC = () => {
         <div className="flex items-center justify-between pb-3 border-b border-border">
           <div className="flex items-center gap-2">
             <ShieldCheck size={16} className="text-accent" />
-            <h2 className="text-sm font-semibold text-text">Conflict Resolution & Consistency Audit</h2>
+            <h2 className="text-sm font-semibold text-text">
+              Conflict Resolution & Consistency Audit
+            </h2>
           </div>
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
             0 Conflicts · LWW Active
@@ -322,7 +324,10 @@ export const SyncCenterPage: React.FC = () => {
         </div>
 
         <p className="text-xs text-text-muted leading-relaxed">
-          SyncTask guarantees deterministic multi-device consistency using an atomic revision vector (<code className="font-mono text-primary">rev</code>) and field-level Last-Write-Wins (LWW). Changes performed offline in Dexie IndexedDB are compacted into atomic outbox mutations, then pushed to MongoDB with transactional revision increments.
+          SyncTask guarantees deterministic multi-device consistency using an atomic revision vector
+          (<code className="font-mono text-primary">rev</code>) and field-level Last-Write-Wins
+          (LWW). Changes performed offline in Dexie IndexedDB are compacted into atomic outbox
+          mutations, then pushed to MongoDB with transactional revision increments.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs font-mono">

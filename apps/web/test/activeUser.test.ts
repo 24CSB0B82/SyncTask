@@ -50,4 +50,3 @@ describe('Active User and Database Isolation', () => {
     expect(backToDemoDb.name).toBe('synctask_demo');
   });
 });
-

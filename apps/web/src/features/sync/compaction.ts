@@ -89,4 +89,3 @@ export function compactOutboxMutations(mutations: OutboxRecord[]): CompactionRes
 
   return { compacted, discardedSeqs };
 }
-

@@ -1,4 +1,13 @@
-import { format, parseISO, startOfDay, isBefore, isSameDay, addDays, subDays, addMonths } from 'date-fns';
+import {
+  format,
+  parseISO,
+  startOfDay,
+  isBefore,
+  isSameDay,
+  addDays,
+  subDays,
+  addMonths,
+} from 'date-fns';
 
 export interface DueChipInfo {
   text: string;
