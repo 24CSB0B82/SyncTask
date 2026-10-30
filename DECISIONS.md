@@ -93,3 +93,31 @@ During project demonstrations and testing, users create an account, log in, and 
      3. Calls `setActiveUserId(null)` (resetting active user to `'demo'`).
      4. Calls `resetDemoDatabase()`, which clears `synctask_demo` and re-seeds clean starter tasks, subtasks, lists, and notifications.
    - The user's account database (`synctask_<userId>`) and MongoDB cloud records remain securely persisted and isolated.
+
+
+---
+
+## Decision 5: Mobile Ergonomics, Kanban Workflow, and Task Recurrence Engine
+
+**Date:** 2026-10-30  
+**Status:** Accepted  
+**Context:**  
+To elevate user experience across laptops and mobile devices, we implemented mobile bottom sheets, touch targets, native HTML5 drag-and-drop Kanban workflow, recurring task generation, and visual progress rings.
+
+### Implementation Details:
+
+1. **Adaptive Modal/Bottom-Sheet (`Dialog.tsx`):**
+   - On screens `< 640px`, dialogs dynamically render as bottom sheets with a top touch-drag handle and bottom safe-area insets.
+   - On desktop screens, modals remain centered with zoom-in animations.
+2. **Interactive 3-Lane Kanban Board (`KanbanBoard.tsx`):**
+   - Introduces **Board** view (`Cards` | `List` | `Board` | `Calendar`).
+   - 3 columns: `To Do`, `In Progress / Urgent`, and `Done` with native HTML5 drag-and-drop and one-click quick lane shifts.
+3. **Deterministic Recurrence Engine (`dates.ts`, `repositories.ts`):**
+   - Supports `daily`, `weekdays (Mon-Fri)`, `weekly`, and `monthly` recurrence patterns.
+   - Completing a recurring task automatically creates the subsequent occurrence with identical attributes and the computed future deadline.
+4. **Subtask Circular Progress Rings (`CircularProgress.tsx`):**
+   - SVG circle with animated stroke offset representing completed subtasks on card headers and row views.
+5. **Celebration Confetti (`Celebration.tsx`):**
+   - Pure CSS randomized particle confetti that triggers when all active tasks in a stream are completed.
+6. **W3C Web Push Foundation (`sw-push.js`):**
+   - Pre-configured Service Worker push event listener and notification click handler ready for cloud push triggers.
