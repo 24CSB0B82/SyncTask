@@ -11,7 +11,8 @@ export async function connectDB(uri: string = ENV.MONGODB_URI): Promise<typeof m
   try {
     const conn = await mongoose.connect(uri);
     isConnected = true;
-    console.log(`[MongoDB] Connected to ${uri}`);
+    const sanitizedUri = uri.replace(/\/\/([^:]+):([^@]+)@/, '//$1:***@');
+    console.log(`[MongoDB] Connected to ${sanitizedUri}`);
     return conn;
   } catch (error) {
     console.error('[MongoDB] Connection error:', error);

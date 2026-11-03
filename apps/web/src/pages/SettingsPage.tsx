@@ -23,6 +23,7 @@ import { useSession } from '../features/auth/useSession';
 import { AuthModal } from '../features/auth/AuthModal';
 import { Button } from '../components/ui/Button';
 import { Select } from '../components/ui/Select';
+import { apiUrl } from '../lib/api';
 import { useToast } from '../components/ui/Toast';
 import { getDb } from '../db/dexie';
 
@@ -157,7 +158,7 @@ export const SettingsPage: React.FC = () => {
       const token = localStorage.getItem('st-auth-token');
       if (token && isAuthenticated) {
         // Cloud export
-        const res = await fetch('/api/auth/export', {
+        const res = await fetch(apiUrl('/api/auth/export'), {
           headers: { Authorization: `Bearer ${token}` },
           credentials: 'include',
         });

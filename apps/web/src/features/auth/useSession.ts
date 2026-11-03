@@ -9,6 +9,7 @@ import type {
 import { getDb, resetDemoDatabase } from '../../db/dexie';
 import { getActiveUserId, setActiveUserId } from '../../db/activeUser';
 import { syncEngine } from '../sync/engine';
+import { apiUrl } from '../../lib/api';
 
 interface AuthState {
   user: AuthUser | null;
@@ -47,7 +48,7 @@ export const useSession = create<AuthState>((set, get) => ({
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const res = await fetch('/api/me', {
+      const res = await fetch(apiUrl('/api/me'), {
         headers,
         credentials: 'include',
       });
@@ -85,7 +86,7 @@ export const useSession = create<AuthState>((set, get) => ({
   login: async (input: LoginInput) => {
     try {
       set({ isLoading: true, error: null });
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -127,7 +128,7 @@ export const useSession = create<AuthState>((set, get) => ({
   register: async (input: RegisterInput) => {
     try {
       set({ isLoading: true, error: null });
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(apiUrl('/api/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -174,7 +175,7 @@ export const useSession = create<AuthState>((set, get) => ({
       const simulatedName = `${provider === 'google' ? 'Google' : 'GitHub'} User`;
       const simulatedAvatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${provider}`;
 
-      const res = await fetch('/api/auth/oauth', {
+      const res = await fetch(apiUrl('/api/auth/oauth'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -229,7 +230,7 @@ export const useSession = create<AuthState>((set, get) => ({
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const res = await fetch('/api/auth/profile', {
+      const res = await fetch(apiUrl('/api/auth/profile'), {
         method: 'PUT',
         headers,
         credentials: 'include',
@@ -262,7 +263,7 @@ export const useSession = create<AuthState>((set, get) => ({
 
   forgotPassword: async (email: string) => {
     try {
-      const res = await fetch('/api/auth/forgot-password', {
+      const res = await fetch(apiUrl('/api/auth/forgot-password'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -279,7 +280,7 @@ export const useSession = create<AuthState>((set, get) => ({
 
   resetPassword: async (token: string, newPassword: string) => {
     try {
-      const res = await fetch('/api/auth/reset-password', {
+      const res = await fetch(apiUrl('/api/auth/reset-password'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, newPassword }),
@@ -305,7 +306,7 @@ export const useSession = create<AuthState>((set, get) => ({
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const res = await fetch('/api/auth/delete-account', {
+      const res = await fetch(apiUrl('/api/auth/delete-account'), {
         method: 'POST',
         headers,
         credentials: 'include',
@@ -363,7 +364,7 @@ export const useSession = create<AuthState>((set, get) => ({
 
   logout: async () => {
     try {
-      await fetch('/api/auth/logout', {
+      await fetch(apiUrl('/api/auth/logout'), {
         method: 'POST',
         credentials: 'include',
       });

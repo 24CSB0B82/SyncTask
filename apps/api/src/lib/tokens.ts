@@ -27,10 +27,12 @@ export function verifyToken(token: string): TokenPayload | null {
   }
 }
 
+const isProd = ENV.NODE_ENV === 'production';
+
 export const authCookieOptions: CookieOptions = {
   httpOnly: true,
-  secure: ENV.NODE_ENV === 'production',
-  sameSite: 'lax',
+  secure: isProd,
+  sameSite: isProd ? (process.env.COOKIE_SAMESITE as 'none' | 'lax' | 'strict') || 'none' : 'lax',
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   path: '/',
 };

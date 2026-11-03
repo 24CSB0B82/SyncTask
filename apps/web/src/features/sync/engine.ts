@@ -1,6 +1,7 @@
 import { getDb, SyncTaskDatabase } from '../../db/dexie';
 import type { SyncPullResponse, SyncPushResponse } from '@synctask/shared';
 import { compactOutboxMutations } from './compaction';
+import { apiUrl } from '../../lib/api';
 
 export type SyncStatus = 'synced' | 'syncing' | 'offline' | 'error';
 
@@ -119,7 +120,7 @@ class SyncEngine {
             mutations: compacted.map(({ seq, ...m }) => m),
           };
 
-          const pushRes = await fetch('/api/sync/push', {
+          const pushRes = await fetch(apiUrl('/api/sync/push'), {
             method: 'POST',
             headers,
             credentials: 'include',
@@ -158,7 +159,7 @@ class SyncEngine {
       const metaCursor = await db.meta.get('sync_cursor');
       const sinceCursor = (metaCursor?.value as number) || 0;
 
-      const pullRes = await fetch(`/api/sync/pull?since=${sinceCursor}`, {
+      const pullRes = await fetch(apiUrl(`/api/sync/pull?since=${sinceCursor}`), {
         headers: {
           Authorization: `Bearer ${token}`,
         },

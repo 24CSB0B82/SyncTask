@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import fs from 'fs';
 import { ENV } from './env';
 import { authRouter, getMeHandler } from './routes/auth';
 import { syncRouter } from './routes/sync';
@@ -31,7 +33,19 @@ app.use(
 );
 app.use(
   cors({
-    origin: ENV.WEB_ORIGIN,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (
+        origin === ENV.WEB_ORIGIN ||
+        origin.endsWith('.vercel.app') ||
+        origin.endsWith('.onrender.com') ||
+        origin.includes('localhost') ||
+        origin.includes('127.0.0.1')
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
@@ -51,7 +65,17 @@ app.get('/api/me', requireAuth, getMeHandler);
 // Synchronization routes
 app.use('/api/sync', syncRouter);
 
-// 404 handler
+// Static frontend files (if built in apps/web/dist for single-service deployment)
+const webDistPath = path.resolve(__dirname, '../../web/dist');
+if (fs.existsSync(webDistPath)) {
+  app.use(express.static(webDistPath));
+  app.get('*', (req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(webDistPath, 'index.html'));
+  });
+}
+
+// 404 handler for unmatched API routes
 app.use((_req: Request, res: Response) => {
   res.status(404).json({
     error: {
