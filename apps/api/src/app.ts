@@ -33,7 +33,10 @@ app.use(
 );
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void
+    ) => {
       if (!origin) return callback(null, true);
       if (
         origin === ENV.WEB_ORIGIN ||
@@ -66,7 +69,7 @@ app.get('/api/me', requireAuth, getMeHandler);
 app.use('/api/sync', syncRouter);
 
 // Static frontend files (if built in apps/web/dist for single-service deployment)
-const webDistPath = path.resolve(__dirname, '../../web/dist');
+const webDistPath = path.resolve(process.cwd(), 'apps/web/dist');
 if (fs.existsSync(webDistPath)) {
   app.use(express.static(webDistPath));
   app.get('*', (req: Request, res: Response, next: NextFunction) => {
