@@ -23,6 +23,7 @@ const UserSchema = new Schema<IUser>(
     cursor: { type: Number, default: 0 },
   },
   {
+    collection: 'user_data',
     timestamps: true,
     toJSON: {
       virtuals: true,
@@ -37,4 +38,4 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-export const UserModel = model<IUser>('User', UserSchema);
+export const UserModel = model<IUser>('User', UserSchema, 'user_data');
